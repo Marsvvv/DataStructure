@@ -154,6 +154,7 @@ public class BinarySearchTree {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private TreeNode getNode(Integer ele, TreeNode node) throws Exception {

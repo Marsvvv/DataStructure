@@ -1,4 +1,4 @@
-package 二叉树;
+package BinaryTree;
 
 /**
  * 二叉树 Binary Tree： 每个节点都不能多于两个孩子
@@ -159,4 +159,3 @@ public class TreeNode {
         }
     }
 }
-4
