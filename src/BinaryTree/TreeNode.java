@@ -1,4 +1,4 @@
-package BinaryTree;
+package 二叉树;
 
 /**
  * 二叉树 Binary Tree： 每个节点都不能多于两个孩子
@@ -38,6 +38,20 @@ public class TreeNode {
 
     static class Traverse {
 
+        /**
+         * 二叉树 先序、中序、后序遍历中的先、中、后形容的是根所应该遍历的位置
+         * 先序就是先遍历根，后序就是在最后遍历根
+         * 默认的顺序是左子树优先于右子树遍历
+         *
+         * 前序、中序、后续遍历均使用递归的方式实现
+         */
+
+        /**
+         * 中序遍历
+         * left - node - right (左 根 右)
+         *
+         * @param node 节点
+         */
         public static void LDR(TreeNode node) {
 
             if (node == null) {
@@ -52,6 +66,39 @@ public class TreeNode {
             if (null != node.right) {
                 System.out.print(")");
             }
+        }
+
+        /**
+         * 先序遍历
+         * node - left - right(根 - 左 - 右)
+         *
+         * @param node 节点
+         */
+        public static void DLR(TreeNode node) {
+
+            if (null == node) {
+                return;
+            }
+            System.out.print(node.element);
+            DLR(node.left);
+            DLR(node.right);
+
+        }
+
+        /**
+         * 后序遍历
+         * left - right - node(左 - 右 - 根)
+         *
+         * @param node 节点
+         */
+        public static void LRD(TreeNode node) {
+
+            if (null == node) {
+                return;
+            }
+            LRD(node.left);
+            LRD(node.right);
+            System.out.print(node.element);
         }
     }
 
@@ -96,7 +143,20 @@ public class TreeNode {
             root.setRight(muti3);
             //  根构建完成
 
+            //  中序遍历
+            System.out.print("中序遍历： ");
             Traverse.LDR(root);
+
+            //  前序遍历
+            System.out.println("");
+            System.out.print("前序遍历： ");
+            Traverse.DLR(root);
+
+            //  后序遍历
+            System.out.println("");
+            System.out.print("后序遍历： ");
+            Traverse.LRD(root);
         }
     }
 }
+4

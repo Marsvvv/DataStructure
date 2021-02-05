@@ -1,7 +1,5 @@
 package Tree;
 
-import java.util.List;
-
 /**
  * 树 tree：是一些节点的集合
  * 如果集合不是空集，则树由跟节点以及0个到多个非空子树组成
