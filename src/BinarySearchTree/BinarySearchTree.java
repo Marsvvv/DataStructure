@@ -2,6 +2,7 @@ package BinarySearchTree;
 
 /**
  * 二叉搜索树： 对于树中的每个节点X，它的左子树中所有项的值都小于X中的项，而它的右子树中所有项的值都大于X中的项
+ * 有时也称二叉排序树 Binary Sort Tree，但是他们的定义是一样的
  * <p>
  * 平均深度 log N
  *
