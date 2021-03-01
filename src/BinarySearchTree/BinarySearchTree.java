@@ -1,5 +1,10 @@
 package BinarySearchTree;
 
+import BinaryTree.TreeNode;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * 二叉搜索树： 对于树中的每个节点X，它的左子树中所有项的值都小于X中的项，而它的右子树中所有项的值都大于X中的项
  * 有时也称二叉排序树 Binary Sort Tree，但是他们的定义是一样的
@@ -94,19 +99,15 @@ public class BinarySearchTree {
         }
 
         //  判断元素与当前节点的大小
-        int result = node.compareTo(ele);
+        int result = node.element.compareTo(ele);
 
         //  这里需要重新赋值时因为当找到适合的空节点进行插入后，我们的数据需要被重新赋值到上一个父节点
-        if (result > 0) {
+        if (result < 0) {
             node.right = insert(ele, node.right);
-        } else if (result < 0) {
+        } else if (result > 0) {
             node.left = insert(ele, node.left);
         }
         return node;
-    }
-
-    public void remove(Integer ele) {
-        remove(ele, node);
     }
 
     /**
@@ -122,7 +123,7 @@ public class BinarySearchTree {
      * @param ele  数据
      * @param node 父节点
      * @return 删除后的节点
-     */
+     *//*
     private TreeNode remove(Integer ele, TreeNode node) {
         try {
             TreeNode child = getNode(ele, node);
@@ -156,6 +157,150 @@ public class BinarySearchTree {
             e.printStackTrace();
         }
 
+    }*/
+    public void removeMinNode() {
+        node = removeMinNode(node);
+    }
+
+    /**
+     * 删除给定节点中最小的节点
+     * 实现方式与删除最大节点有一点点不同，但是意思差不多
+     * 1.如果左节点右节点都为空，那么直接返回null，父节点会将上个节点置为null
+     * 2.如果有右节点，那么返回右节点，父节点连接剩余节点
+     *
+     * @param node 根节点
+     * @return 最小的节点
+     */
+    private TreeNode removeMinNode(TreeNode node) {
+        //  1.递归结束条件
+        if (node.left == null) {
+            //  2.判断当前节点是否拥有右节点
+            if (node.right == null) {
+                //  3.叶子节点只需要返回null，这样使得上个节点与之连接
+                return null;
+            } else {
+                //  4.当前节点拥有右节点，则将右节点与上个节点连接
+                return node.right;
+            }
+        }
+
+        node.left = removeMinNode(node.left);
+        return node;
+    }
+
+    public void removeMaxNode() {
+        node = removeMaxNode(node);
+    }
+
+    /**
+     * 删除给定节点中最大的节点
+     * 此实现方式和最小节点类似，有一点小小的区别
+     * 因为我要删除最大的节点，所以最大的节点是没有右子树的，那么此节点只会有两种情况：
+     * 1.此节点有左子树
+     * 2.此节点为叶子节点(此节点没有左子树)
+     * 不管有没有左子树，我都取出左子树，如果左子树为空我取出的是null，并不影响之后的代码逻辑，因为如果左子树本来就为空，那么返回null没有问题
+     * 比较关键的就是递归的时候要返回给父级的节点
+     * 最后的return node非常关键，如果没有到递归结束条件，那么我继续查找，我返回当前的深度为1的节点
+     *
+     * @param node 根节点
+     * @return 最大的节点
+     */
+    private TreeNode removeMaxNode(TreeNode node) {
+        //  1.递归结束条件
+        if (node.right == null) {
+            //  2.获取node的左子树，即使为null也不影响逻辑
+            TreeNode left = node.left;
+            //  3.将node的左子树置空
+            node.left = null;
+            //  4.返回左子树值
+            return left;
+        }
+
+        node.right = removeMaxNode(node.right);
+        return node;
+    }
+
+    public void remove(Integer e) {
+        node = remove(node, e);
+    }
+
+    /**
+     * 删除节点有3种情况：
+     * 1.删除的节点只有左孩子，将删除节点的父节点的删除节点的位置设置为删除节点的左孩子
+     * 2.删除的节点只有右孩子，将删除节点的父节点的删除节点的位置设置为删除节点的右孩子
+     * 3.删除的节点有两个孩子（Hibbard Deletion），寻找后继节点，删除节点的右节点的最小左孩子设置为删除节点的位置
+     * 也可以查找前驱节点，也就是删除节点的左节点的最大节点
+     * 4.删除的节点没有孩子
+     *
+     * @param node
+     * @param e
+     * @return
+     */
+    private TreeNode remove(TreeNode node, Integer e) {
+        //  先找到要删除的节点
+        if (node.element.equals(e)) {
+            if (node.right == null) {
+                //  左孩子是否为空不需要判断，为空直接为null也不影响逻辑
+                //  只有左孩子的情况
+                return node.left;
+            }
+
+            if (node.left == null) {
+                return node.right;
+            }
+
+            //  查找当前节点右节点的最小节点 --- 后继节点
+            TreeNode min = findMin(node.right);
+            //  后继节点连接删除节点的左右子节点
+            min.left = node.left;
+            //  删除后继节点的位置
+            min.right = removeMinNode(node.right);
+            //  返回后继节点
+            return min;
+        }
+
+
+        //  分情况进行递归
+        if (node.element.compareTo(e) > 0) {
+            node.left = remove(node.left, e);
+        } else if (node.element.compareTo(e) < 0) {
+            node.right = remove(node.right, e);
+        }
+        return node;
+    }
+
+    /**
+     * 层序遍历
+     * 层序遍历使用队列进行实现，不使用递归
+     * 将节点放入队列中，先进先出，队列的处理流程就是如果左或右孩子不为null，那么就将左、右孩子加入队列中
+     * 直到取出队列中所有的节点
+     */
+    public void levelOrder() {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(node);
+
+        while (!queue.isEmpty()) {
+            //  从队列中拿出第一个元素
+            TreeNode node = queue.remove();
+            //  判断元素左右节点是否为空
+            if (node.left != null) {
+                queue.add(node.left);
+            }
+            if (node.right != null) {
+                queue.add(node.right);
+            }
+            System.out.println(node.element);
+        }
+    }
+
+    public static void main(String[] args) {
+        BinarySearchTree bst = new BinarySearchTree();
+        bst.insert(8);
+        bst.insert(3);
+        bst.insert(1);
+        bst.insert(10);
+        bst.insert(6);
+        bst.levelOrder();
     }
 
     private TreeNode getNode(Integer ele, TreeNode node) throws Exception {
